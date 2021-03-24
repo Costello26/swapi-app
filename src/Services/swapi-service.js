@@ -3,7 +3,8 @@ export default class Swapi {
     getResource = async (url) => {
         const res = await fetch(url);
         if(!res.ok){
-            throw new Error(`Could not fetch - status ${res.status}`)
+            //throw new Error(`Could not fetch - status ${res.status}`)
+            console.log(`Could not fetch - status ${res.status}`)
         }
         const body = await res.json()
         return body;
@@ -26,7 +27,7 @@ export default class Swapi {
         return {
             count: res.count,
             previous: res.previous,
-            next: res.next,
+            next: res.next, 
             results: res.results.map(this._transformPlanet)
         };
     }
@@ -60,9 +61,17 @@ export default class Swapi {
             id: +/\d+/.exec(person.url),
             name: person.name,
             type: 'characters',
-            gender: person.gender,
-            birthYear: person.birth_year,
-            eyeColor: person.eye_color
+            image: `https://starwars-visualguide.com/assets/img/characters/${+/\d+/.exec(person.url)}.jpg`,
+            fields: [
+                {label: 'Gender: ', content: person.gender},
+                {label: 'Birth Year: ', content: person.birth_year},
+                {label: 'Eye Color: ', content: person.eye_color}
+            ],
+            additionalFields: [
+                {label: 'Skin Color: ', content: person.skin_color},
+                {label: 'Hair Color: ', content: person.hair_color},
+                {label: 'Height: ', content: person.height}
+            ]
         }
     }
 
@@ -71,9 +80,17 @@ export default class Swapi {
             id: +/\d+/.exec(planet.url),
             name: planet.name,
             type: 'planets',
-            population: planet.population,
-            rotationPeriod: planet.rotation_period,
-            diameter: planet.diameter
+            image: `https://starwars-visualguide.com/assets/img/planets/${+/\d+/.exec(planet.url)}.jpg`,
+            fields: [
+                {label: 'Population: ', content: (parseInt(planet.population) * 10).toLocaleString('en-EN')},
+                {label: 'Rotation period: ', content: planet.rotation_period + ' months'},
+                {label: 'Diameter: ', content: (parseInt(planet.diameter) * 10).toLocaleString('en-EN') + ' km'}
+            ],
+            additionalFields: [
+                {label: 'Climate: ', content: planet.climate },
+                {label: 'Terrain: ', content: planet.terrain },
+                {label: 'Orbital Period: ', content: planet.orbital_period }
+            ]
         }
     }
 
@@ -82,9 +99,17 @@ export default class Swapi {
             id: +/\d+/.exec(starship.url),
             name: starship.name,
             type: 'starships',
-            model: starship.model,
-            manufacturer: starship.manufacturer,
-            crew: starship.crew
+            image: `https://starwars-visualguide.com/assets/img/starships/${+/\d+/.exec(starship.url)}.jpg`,
+            fields: [
+                {label: 'Model: ', content: starship.model},
+                {label: 'Manufacturer: ', content: starship.manufacturer},
+                {label: 'Crew: ', content: starship.crew}
+            ],
+            additionalFields: [
+                {label: 'Class: ', content: starship.starship_class },
+                {label: 'Passengers: ', content: starship.passengers},
+                {label: 'Length: ', content: starship.length},
+            ]
         }
     }
 
@@ -105,4 +130,18 @@ export default class Swapi {
     randomStarship(){
         return this.randomId(2,10);
     }
+
+    async checkElem(type, id){
+        const res =await fetch(`${this._apiBase}${type}/${id}`)
+        if(!res.ok){
+            return false
+        }
+        return true
+    }
+
+    // decimalPoint(num){
+    //     return (parseInt(num) * 10).toLocaleString('en-EN');
+    // }
+
+    
 }

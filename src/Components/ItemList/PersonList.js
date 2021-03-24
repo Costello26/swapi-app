@@ -1,8 +1,14 @@
-import { useEffect } from 'react'
+import { useEffect, useContext } from 'react'
 import { ItemList } from './Itemlist';
 import Swapi from '../../Services/swapi-service';
+import { Context } from '../../Functions/context';
 
-export const PersonList = ({currentList, setCurrentList, activeElem, setActiveElem}) => {
+export const PersonList = () => {
+    const {
+        currentLists: {currentList, setCurrentList},
+        activeElems: {setActiveElem},
+        colorSchemes: {colorScheme}
+    } = useContext(Context);
     const swapi = new Swapi();
     const setList = () => {
         swapi.getAllPeople()
@@ -20,6 +26,7 @@ export const PersonList = ({currentList, setCurrentList, activeElem, setActiveEl
         <ItemList 
             currentList={currentList}
             setActiveElem={setActiveElem}
-            pagination={pagination}/>
+            pagination={pagination}
+            colorScheme={colorScheme}/>
     )
 }

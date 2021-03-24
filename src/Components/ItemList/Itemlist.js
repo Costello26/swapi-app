@@ -1,17 +1,16 @@
 import styled from 'styled-components';
 import { Loader } from '../Loader/Loader';
 
-export const ItemList = ({currentList, setActiveElem, pagination}) => {
+export const ItemList = ({currentList, setActiveElem, pagination, colorScheme}) => {
     return(
-        <ItemListWrap>
+        <ItemListWrap {...colorScheme} loading={currentList.loading ? 1 : 0}>
             { currentList.results ?
                 <>
                 <ul>
                 {currentList.results.map((item, key)=>
-                    <li key={key}>
+                    <li key={key} onClick={(e)=> {e.preventDefault(); setActiveElem(item)}}>
                         <a className={item.active ? 'active':''} 
                         href="true" 
-                        onClick={(e)=> {e.preventDefault(); setActiveElem(item)}}
                         num={item.id}>
                             {item.name}
                         </a>
@@ -26,6 +25,18 @@ export const ItemList = ({currentList, setActiveElem, pagination}) => {
                            }}>
                         <i className="fas fa-angle-double-left"></i>
                     </a>
+                    <div className="pagination">
+                        <div className="pagination-content">
+                            <span> 
+                            {currentList.previous ?
+                                 +/\d+/.exec(currentList.previous) + 1
+                                :
+                                1
+                            } 
+                            &nbsp;of&nbsp; 
+                            {Math.ceil(currentList.count/10) } </span>
+                        </div>
+                    </div>
                     <a href="true" 
                        className="controls-button controls-button-prev"
                        onClick={(e)=> {
@@ -44,11 +55,13 @@ export const ItemList = ({currentList, setActiveElem, pagination}) => {
 
 const ItemListWrap = styled.div`
     width: 100%;
-    background-color: #555;
+    background-color: ${(props)=> props.secondary};
     border-radius: 10px;
     padding: 10px;
-    max-height: 430px;
-    position: relative;
+    max-height: 500px;
+    animation: ${(props) => props.loading ? 'none' : 'fadeIn 1s'};
+    transition: .3s;
+    //position: relative;
     ul{
         padding: 0;
         margin: 0;
@@ -57,16 +70,16 @@ const ItemListWrap = styled.div`
         overflow-x: hidden;
         &::-webkit-scrollbar{
             width: 6px;
-            background-color: #666;
+            background-color: ${(props)=> props.primary};
             border-radius: 25px;
             position: relative;
         }
         &::-webkit-scrollbar-thumb{
-            background-color: #444;
+            background-color: ${(props)=> props.active};
         }
         li{
             flex-basis: 100%;
-            background-color: #444;
+            background-color: ${(props)=> props.primary};
             border-radius: 8px;
             margin: 10px 0px;
             padding: 15px 5px;
@@ -79,6 +92,7 @@ const ItemListWrap = styled.div`
                 display: block;
                 height: 100%;
                 width: 100%;
+                color: ${(props)=> props.text};
                 &:hover, &.active{
                     color: #bbb;
                 }
@@ -97,13 +111,15 @@ const ItemListWrap = styled.div`
             display: flex;
             justify-content: center;
             align-items: center;
-            background-color: #444;
+            background-color: ${(props)=> props.active};
             padding: 5px 10px;
             border-radius: 5px;
             transition: .3s;
-            &:hover, &.active{
-                color: #bbb;
-            }
+            color: #fff;
+            
+        }
+        .pagination{
+            color: ${(props)=> props.text} !important;
         }
     }
 `;

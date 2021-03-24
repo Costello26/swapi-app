@@ -21,7 +21,7 @@ const LoaderWrap = styled.div`
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: #555;
+    background: linear-gradient(90deg, rgb(107, 0, 173) 0%, rgb(0, 8, 81) 100%);
     display: flex;
     justify-content: center;
     align-items: center;

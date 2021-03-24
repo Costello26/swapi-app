@@ -1,12 +1,19 @@
+import { NavLink } from 'react-router-dom';
 import Styled from 'styled-components';
-import { darkColor } from '../../GlobalStyles';
+import { device } from '../../GlobalStyles';
 
-export const HeaderBar = ({links}) => {
+export const HeaderBar = ({links, colorScheme, device}) => {
     return(
-        <Navbar>
+        <Navbar {...colorScheme} {...device}>
             <ul>
                 {links.map((link, value) => 
-                    <li key={value}><a className={link.active ? 'active':''} href='true'>{link.text}</a></li>
+                    <li key={value}>
+                        <NavLink 
+                        className={link.active ? 'active':''} 
+                        to={link.path}>
+                            {link.text}
+                        </NavLink>
+                    </li>
                 )}
             </ul>
         </Navbar>
@@ -17,7 +24,6 @@ const Navbar = Styled.div`
     ul{
         display: flex;
         flex-direction: row;
-
         li{
             margin: 0 5px;
             a{
@@ -25,10 +31,29 @@ const Navbar = Styled.div`
                 padding: 5px 8px;
                 border-radius: 3px;
                 &:hover{
-                    background-color: ${darkColor};
+                    background-color: ${(props) => props.active};
+                    color: #fff;
                 }
                 &.active{
-                    background-color: ${darkColor};
+                    background-color: ${(props) => props.active};
+                    color: #fff;
+                }
+            }
+        }
+    }
+    @media ${device.mobileL} {
+        ul{
+            padding: 0;
+            display: flex;
+            flex-wrap: wrap;
+            li{ 
+                display: inline-block;
+                a{
+                    font-size: 15px;
+                    background-color: rgb(107,0,173);
+                    color: #fff;
+                    padding: 5px 15px;
+                    border-radius: 6px;
                 }
             }
         }

@@ -1,13 +1,21 @@
-import { useEffect } from 'react';
+import { useEffect, useContext } from 'react';
 import { SingleElem } from './SingleElem';
 import { updateElem } from '../../Functions/elemType';
+import { Context } from '../../Functions/context';
 
-export const RandomElem = ({randomElem, setRandomElem, type}) => {
+export const RandomElem = ({type}) => {
+    const {
+        randomElems: {randomElem, setRandomElem},
+        colorSchemes: {colorScheme}
+    } = useContext(Context);
     useEffect(()=>{
         updateElem(type, setRandomElem);
-        setInterval(updateElem(type, setRandomElem), 5000);
-    }, [ ]);
+        const upd = setInterval(() => updateElem(type, setRandomElem), 8000);
+        return ()=>{
+            clearInterval(upd)
+        }
+    }, [setRandomElem, type]);
     return(
-        <SingleElem content={randomElem}/>
+        <SingleElem content={randomElem} colorScheme={colorScheme}/>
     )
 }
