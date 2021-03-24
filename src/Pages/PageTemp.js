@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { Context } from '../Functions/context';
 import {Helmet} from "react-helmet";
 import { Redirect } from 'react-router-dom';
+import { device } from '../GlobalStyles';
 
 export const PageTemp = ({activeElem}) => {
     const {colorSchemes: {colorScheme}} = useContext(Context)
@@ -59,20 +60,33 @@ const PageTempWrap = styled.div`
     padding: 10px;
     justify-content: space-around;
     animation: fadeIn 1s linear;
+    @media ${device.tablet} {
+        height: calc(100vh - 160px);
+        flex-direction: column;
+    }
     .img__wrap{
         flex-basis: 30%;
         height: 100%;
+        @media ${device.tablet} {
+            flex-basis: 100%;
+            max-height: 300px;
+            object-fit: cover;
+        }
         img{
             width: 100%;
             height: 100%;
             border-radius: 8px;
         }
+        
     }
     .data__wrap{
         background-color: ${(props) => props.primary};
         transition: .3s;
         border-radius: 8px;
         flex-basis: 68%;
+        @media ${device.tablet} {
+            flex-basis: 50%;
+        }
         .data__wrap__inner{
             padding: 15px;
         }
@@ -84,6 +98,10 @@ const PageTempWrap = styled.div`
                 padding: 5px 15px;
                 border-radius: 6px;
                 margin: 0 3px;
+                @media ${device.tablet} {
+                    font-size: 12px;
+                    padding: 3px 5px;
+                }
                 &:first-letter{
                     text-transform: uppercase;
                 }
@@ -105,6 +123,9 @@ const PageTempWrap = styled.div`
             display: inline-block;
             font-size: 20px;
             padding: 3px 0;
+            @media ${device.tablet} {
+                font-size: 16px;
+            }
         }
     }
 `;
