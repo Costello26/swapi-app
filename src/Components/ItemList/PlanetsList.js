@@ -1,4 +1,4 @@
-import { useEffect, useContext } from 'react'
+import { useEffect, useContext, useMemo, useCallback } from 'react'
 import { ItemList } from './Itemlist';
 import Swapi from '../../Services/swapi-service';
 import { Context } from '../../Functions/context';
@@ -9,14 +9,14 @@ export const PlanetsList = () => {
         activeElems: {setActiveElem},
         colorSchemes: {colorScheme}
     } = useContext(Context)
-    const swapi = new Swapi();
-    const setList = () => {
+    const swapi = useMemo(() => new Swapi(), []);
+    const setList = useCallback( () => {
         swapi.getAllPlanets()
             .then((AllElems)=> {setCurrentList(AllElems)})
-    }
+    }, [setCurrentList, swapi])
     useEffect(()=>{
         setList()
-    }, [])
+    }, [setList])
     const pagination = (e, direction) => {
         e.preventDefault()
         swapi.getAllPlanets(direction)

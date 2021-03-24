@@ -1,4 +1,4 @@
-import { useEffect, useContext } from 'react'
+import { useEffect, useContext, useCallback, useMemo } from 'react'
 import { ItemList } from './Itemlist';
 import Swapi from '../../Services/swapi-service';
 import { Context } from '../../Functions/context';
@@ -9,14 +9,19 @@ export const PersonList = () => {
         activeElems: {setActiveElem},
         colorSchemes: {colorScheme}
     } = useContext(Context);
-    const swapi = new Swapi();
-    const setList = () => {
-        swapi.getAllPeople()
-            .then((AllElems)=> {setCurrentList(AllElems)})
-    }
-    useEffect(()=>{
+    const swapi = useMemo(()=> new Swapi(), [])
+   
+    const memoizedCallback = useCallback(()=>{
+        const setList = () => {
+            swapi.getAllPeople()
+                .then((AllElems)=> {setCurrentList(AllElems)})
+        }
         setList()
-    }, [])
+    }, [setCurrentList, swapi])
+    
+    useEffect(()=>{
+        memoizedCallback()
+    }, [memoizedCallback])
     const pagination = (e, direction) => {
         e.preventDefault()
         swapi.getAllPeople(direction)
